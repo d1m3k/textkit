@@ -1,0 +1,16 @@
+---
+import Base from '../layouts/Base.astro';
+import { withBase } from '../config/site';
+---
+
+<Base title="404 — Command Not Found" description="That page does not exist on TextKit." path="/404.html">
+  <div style="padding:70px 0">
+    <p style="font-family:var(--mono);color:var(--muted)"><span style="color:var(--green)">$</span> open this-page</p>
+    <h1>bash: this-page: command not found <span style="color:var(--muted)">(404)</span></h1>
+    <p style="color:var(--muted);max-width:560px">
+      The address you asked for does not exist. It may have moved, or the link had a typo.
+      Head back to the <a href={withBase('/tools/')}>tool index</a> or the
+      <a href={withBase('/')}>homepage</a> and run a different command.
+    </p>
+  </div>
+</Base>

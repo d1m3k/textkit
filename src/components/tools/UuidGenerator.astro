@@ -1,0 +1,34 @@
+---
+---
+<div>
+  <div class="grid2">
+    <div>
+      <label for="uu-count">How many UUIDs? (1–1000)</label>
+      <input type="number" id="uu-count" value="5" min="1" max="1000" />
+    </div>
+    <div style="display:flex;align-items:end">
+      <label class="check"><input type="checkbox" id="uu-upper" /> UPPERCASE output</label>
+    </div>
+  </div>
+  <div class="btnrow">
+    <button class="btn" id="uu-gen">Generate UUIDs</button>
+    <button class="btn amber" id="uu-copy">Copy all</button>
+  </div>
+  <label for="uu-out">Generated UUIDs (version 4)</label>
+  <textarea id="uu-out" readonly placeholder="Your UUIDs appear here…" spellcheck="false" style="min-height:190px"></textarea>
+</div>
+
+<script>
+  import { uuidV4 } from '../../lib/logic.js';
+  const $ = (id) => document.getElementById(id);
+  function gen() {
+    let n = parseInt($('uu-count').value, 10);
+    if (!Number.isFinite(n)) n = 5;
+    n = Math.min(1000, Math.max(1, n));
+    const ids = Array.from({ length: n }, () => uuidV4());
+    $('uu-out').value = $('uu-upper').checked ? ids.join('\n').toUpperCase() : ids.join('\n');
+  }
+  $('uu-gen').addEventListener('click', gen);
+  $('uu-copy').addEventListener('click', async () => { const v = $('uu-out').value; if (v) await navigator.clipboard.writeText(v); });
+  gen();
+</script>

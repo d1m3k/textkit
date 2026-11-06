@@ -1,0 +1,59 @@
+---
+---
+<div>
+  <div class="status ok" id="ts-now">Current Unix time: —</div>
+
+  <h3 style="margin-top:26px">Timestamp → Date</h3>
+  <div class="grid2">
+    <div>
+      <label for="ts-in">Unix timestamp</label>
+      <input type="text" id="ts-in" placeholder="e.g. 1762483200 or 1762483200000" />
+    </div>
+    <div>
+      <label for="ts-unit">Unit</label>
+      <select id="ts-unit">
+        <option value="auto">Auto-detect</option>
+        <option value="s">Seconds</option>
+        <option value="ms">Milliseconds</option>
+      </select>
+    </div>
+  </div>
+  <div class="btnrow"><button class="btn" id="ts-convert">Convert to date</button></div>
+  <div class="status" id="ts-result">Enter a timestamp to see its date forms.</div>
+
+  <h3 style="margin-top:26px">Date → Timestamp</h3>
+  <label for="ts-date">Pick a date and time (your local timezone)</label>
+  <input type="datetime-local" id="ts-date" step="1" />
+  <div class="btnrow"><button class="btn" id="ts-convert2">Convert to timestamp</button></div>
+  <div class="status" id="ts-result2">Pick a date to see its Unix timestamps.</div>
+</div>
+
+<script>
+  import { timestampToDate, dateToTimestamp } from '../../lib/logic.js';
+  const $ = (id) => document.getElementById(id);
+  function tick() {
+    const now = Date.now();
+    $('ts-now').textContent = `Current Unix time: ${Math.floor(now / 1000)} s · ${now} ms · ${new Date(now).toISOString()}`;
+  }
+  tick(); setInterval(tick, 1000);
+
+  $('ts-convert').addEventListener('click', () => {
+    const el = $('ts-result');
+    try {
+      const r = timestampToDate($('ts-in').value.trim(), $('ts-unit').value);
+      el.className = 'status ok';
+      el.innerHTML = '';
+      el.textContent = `ISO (UTC): ${r.iso} · Local: ${r.date.toLocaleString()} · interpreted as ${r.unitUsed === 'ms' ? 'milliseconds' : 'seconds'}`;
+    } catch (e) { el.className = 'status err'; el.textContent = '✗ ' + e.message; }
+  });
+  $('ts-convert2').addEventListener('click', () => {
+    const el = $('ts-result2');
+    const v = $('ts-date').value;
+    if (!v) { el.className = 'status err'; el.textContent = '✗ Pick a date first.'; return; }
+    try {
+      const r = dateToTimestamp(new Date(v));
+      el.className = 'status ok';
+      el.textContent = `Seconds: ${r.seconds} · Milliseconds: ${r.millis} · ISO (UTC): ${r.iso}`;
+    } catch (e) { el.className = 'status err'; el.textContent = '✗ ' + e.message; }
+  });
+</script>

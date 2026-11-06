@@ -1,0 +1,27 @@
+---
+import Base from '../../layouts/Base.astro';
+import { CATEGORIES, TOOLS, toolsByCategory, withBase } from '../../config/site';
+---
+
+<Base title="All Tools" description="Every TextKit tool on one page: JSON, encoding, text, generators and converters — all free and all running in your browser." path="/tools/">
+  <nav class="breadcrumb"><a href={withBase('/')}>home</a> / <span>tools</span></nav>
+  <h1>All {TOOLS.length} tools</h1>
+  <p style="color:var(--muted);max-width:720px">
+    One job each, done properly, in your browser. Pick a tool — every one of them is free,
+    needs no account, and processes your input locally.
+  </p>
+
+  {CATEGORIES.map((cat) => (
+    <section>
+      <p class="cat-label">// {cat}</p>
+      <div class="card-grid">
+        {toolsByCategory(cat).map((t) => (
+          <a class="tool-card" href={withBase(`/tool/${t.slug}/`)}>
+            <h3>{t.name}</h3>
+            <p>{t.short}</p>
+          </a>
+        ))}
+      </div>
+    </section>
+  ))}
+</Base>

@@ -1,0 +1,45 @@
+---
+import ToolPage from '../../layouts/ToolPage.astro';
+import { TOOLS, relatedTools, type Tool } from '../../config/site';
+
+import JsonFormatter from '../../components/tools/JsonFormatter.astro';
+import JsonToCsv from '../../components/tools/JsonToCsv.astro';
+import Base64EncodeDecode from '../../components/tools/Base64EncodeDecode.astro';
+import UrlEncodeDecode from '../../components/tools/UrlEncodeDecode.astro';
+import WordCounter from '../../components/tools/WordCounter.astro';
+import CaseConverter from '../../components/tools/CaseConverter.astro';
+import UuidGenerator from '../../components/tools/UuidGenerator.astro';
+import PasswordGenerator from '../../components/tools/PasswordGenerator.astro';
+import TimestampConverter from '../../components/tools/TimestampConverter.astro';
+import HashGenerator from '../../components/tools/HashGenerator.astro';
+import DiffChecker from '../../components/tools/DiffChecker.astro';
+import LoremIpsumGenerator from '../../components/tools/LoremIpsumGenerator.astro';
+
+const COMPONENTS: Record<string, any> = {
+  'json-formatter': JsonFormatter,
+  'json-to-csv': JsonToCsv,
+  'base64-encode-decode': Base64EncodeDecode,
+  'url-encode-decode': UrlEncodeDecode,
+  'word-counter': WordCounter,
+  'case-converter': CaseConverter,
+  'uuid-generator': UuidGenerator,
+  'password-generator': PasswordGenerator,
+  'timestamp-converter': TimestampConverter,
+  'hash-generator': HashGenerator,
+  'diff-checker': DiffChecker,
+  'lorem-ipsum-generator': LoremIpsumGenerator,
+};
+
+export function getStaticPaths() {
+  return TOOLS.map((tool) => ({ params: { slug: tool.slug }, props: { tool } }));
+}
+
+interface Props { tool: Tool }
+const { tool } = Astro.props;
+const ToolUI = COMPONENTS[tool.slug];
+const related = relatedTools(tool, 3);
+---
+
+<ToolPage tool={tool} related={related}>
+  <ToolUI />
+</ToolPage>

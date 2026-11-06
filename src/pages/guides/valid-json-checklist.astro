@@ -1,0 +1,79 @@
+---
+import Base from '../../layouts/Base.astro';
+import { withBase } from '../../config/site';
+---
+
+<Base title="The Valid JSON Checklist" description="A practical checklist for writing JSON that parses first time — and for finding the bug fast when it does not." path="/guides/valid-json-checklist/">
+  <nav class="breadcrumb"><a href={withBase('/')}>home</a> / <a href={withBase('/guides/')}>guides</a> / <span>valid-json-checklist</span></nav>
+  <div class="prose">
+    <h1>The valid JSON checklist: write it right, debug it fast</h1>
+    <p>
+      JSON looks forgiving because it resembles JavaScript, but the grammar is much stricter
+      than the language it came from. Most "invalid JSON" bugs are not mysterious — they are
+      one of about seven recurring mistakes. Run through this checklist when you write JSON
+      by hand, and again when a parser rejects a payload you received from somewhere else.
+    </p>
+
+    <h2>The seven rules that catch almost everything</h2>
+    <p>
+      <strong>1. Keys are always double-quoted strings.</strong> In JSON there is no such
+      thing as an unquoted key or a single-quoted string. If you write a key without quotes,
+      or wrap a value in single quotes because that is what your programming language prefers,
+      a strict parser will refuse the document at that exact character.
+    </p>
+    <p>
+      <strong>2. No trailing commas.</strong> JavaScript arrays and objects tolerate a comma
+      after the last item; JSON does not. Trailing commas are the single most common cause of
+      hand-edited config files failing to load, precisely because they look harmless.
+    </p>
+    <p>
+      <strong>3. Strings escape a small, fixed set of characters.</strong> Inside a string,
+      a double quote must be written as \" and a backslash as \\, and control characters such
+      as newlines must be escaped as \n — never typed literally. Text copied out of a log file
+      or an email frequently breaks here.
+    </p>
+    <p>
+      <strong>4. Numbers have one format.</strong> No leading plus, no leading zeros (0.5 is
+      fine, 00.5 is not), no hexadecimal, and no bare NaN or Infinity — those are JavaScript
+      values, not JSON. Scientific notation such as 1.2e3 is allowed.
+    </p>
+    <p>
+      <strong>5. The only literals are true, false and null — lowercase.</strong> True,
+      False, None and NULL all belong to other languages. JSON is case-sensitive about its
+      three literal values, and parsers will not guess what you meant.
+    </p>
+    <p>
+      <strong>6. Comments do not exist.</strong> There is no // or /* */ syntax in JSON. If
+      you need annotations in a config file, that format is JSON5, JSONC or YAML — not JSON —
+      and a strict parser will fail on the first comment it meets.
+    </p>
+    <p>
+      <strong>7. The document is one value, encoded as UTF-8.</strong> A JSON file contains
+      exactly one top-level value: an object, array, string, number, boolean or null. Two
+      objects in a row is a JSON Lines stream, not a JSON document, and stray text after the
+      closing bracket — a log prefix, a BOM gone wrong — invalidates the whole thing.
+    </p>
+
+    <h2>Debugging a payload that will not parse</h2>
+    <p>
+      Start from the error position, not from the top of the file. Parsers stop at the first
+      character they cannot make sense of, so the real mistake is almost always at, or a few
+      characters before, the reported line and column. Look backwards from that point for the
+      usual suspects: the comma after the previous item, the quote that was supposed to close
+      the previous string, the bracket that never opened.
+    </p>
+    <p>
+      Next, format what you have. If most of the document survives reformatting in a tool
+      like the TextKit <a href={withBase('/tool/json-formatter/')}>JSON Formatter</a>, the
+      broken region stands out visually — indentation suddenly stops lining up where the
+      structure went wrong. Finally, shrink the problem: delete half the payload and test
+      again. Two or three rounds of bisection will isolate any syntax error to a handful of
+      lines, no matter how large the original file was.
+    </p>
+    <p>
+      And a defensive habit worth adopting: whenever your code produces JSON, produce it with
+      a serializer, never by joining strings. Every hand-built JSON string is a future
+      escaping bug waiting for the one input that contains a quote.
+    </p>
+  </div>
+</Base>

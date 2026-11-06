@@ -1,0 +1,45 @@
+---
+---
+<div>
+  <div class="grid3">
+    <div>
+      <label for="li-type">Generate</label>
+      <select id="li-type">
+        <option value="paragraphs">Paragraphs</option>
+        <option value="sentences">Sentences</option>
+        <option value="words">Words</option>
+      </select>
+    </div>
+    <div>
+      <label for="li-count">How many?</label>
+      <input type="number" id="li-count" value="3" min="1" max="100" />
+    </div>
+    <div style="display:flex;align-items:end">
+      <label class="check"><input type="checkbox" id="li-classic" checked /> Start with “Lorem ipsum…”</label>
+    </div>
+  </div>
+  <div class="btnrow">
+    <button class="btn" id="li-gen">Generate</button>
+    <button class="btn amber" id="li-copy">Copy text</button>
+  </div>
+  <label for="li-out">Placeholder text</label>
+  <textarea id="li-out" readonly placeholder="Generated text appears here…" style="min-height:190px"></textarea>
+</div>
+
+<script>
+  import { loremGenSeeded } from '../../lib/logic.js';
+  const $ = (id) => document.getElementById(id);
+  function gen() {
+    let n = parseInt($('li-count').value, 10);
+    if (!Number.isFinite(n)) n = 3;
+    n = Math.min(100, Math.max(1, n));
+    $('li-out').value = loremGenSeeded(
+      { type: $('li-type').value, count: n, startClassic: $('li-classic').checked },
+      Math.random
+    );
+  }
+  $('li-gen').addEventListener('click', gen);
+  $('li-type').addEventListener('change', gen);
+  $('li-copy').addEventListener('click', async () => { const v = $('li-out').value; if (v) await navigator.clipboard.writeText(v); });
+  gen();
+</script>

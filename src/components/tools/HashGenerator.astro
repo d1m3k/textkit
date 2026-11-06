@@ -1,0 +1,40 @@
+---
+---
+<div>
+  <label for="hg-in">Text to hash</label>
+  <textarea id="hg-in" placeholder="Type or paste text — the digest updates when you click Generate…" spellcheck="false"></textarea>
+  <div style="display:flex;gap:22px;flex-wrap:wrap;margin:12px 0">
+    <label class="check"><input type="radio" name="hg-algo" value="SHA-1" /> SHA-1</label>
+    <label class="check"><input type="radio" name="hg-algo" value="SHA-256" checked /> SHA-256</label>
+    <label class="check"><input type="radio" name="hg-algo" value="SHA-512" /> SHA-512</label>
+  </div>
+  <div class="btnrow">
+    <button class="btn" id="hg-gen">Generate hash</button>
+    <button class="btn ghost" id="hg-clear">Clear</button>
+  </div>
+  <label for="hg-out">Digest (hex)</label>
+  <textarea id="hg-out" readonly placeholder="Digest appears here…" spellcheck="false" style="min-height:90px"></textarea>
+  <div class="btnrow">
+    <button class="btn amber" id="hg-copy">Copy digest</button>
+  </div>
+  <div class="status" id="hg-status">Uses the Web Crypto API (crypto.subtle) built into your browser.</div>
+</div>
+
+<script>
+  import { hashText } from '../../lib/logic.js';
+  const $ = (id) => document.getElementById(id);
+  $('hg-gen').addEventListener('click', async () => {
+    const algo = document.querySelector('input[name="hg-algo"]:checked').value;
+    const status = $('hg-status');
+    try {
+      $('hg-out').value = await hashText($('hg-in').value, algo);
+      status.className = 'status ok';
+      status.textContent = `✓ ${algo} digest generated (${$('hg-out').value.length} hex characters).`;
+    } catch (e) {
+      status.className = 'status err';
+      status.textContent = '✗ ' + e.message;
+    }
+  });
+  $('hg-clear').addEventListener('click', () => { $('hg-in').value = ''; $('hg-out').value = ''; });
+  $('hg-copy').addEventListener('click', async () => { const v = $('hg-out').value; if (v) await navigator.clipboard.writeText(v); });
+</script>

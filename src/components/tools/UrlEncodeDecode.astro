@@ -1,0 +1,41 @@
+---
+---
+<div>
+  <label for="url-in">Input</label>
+  <textarea id="url-in" placeholder="Text to percent-encode, or an encoded string to decode…" spellcheck="false"></textarea>
+  <label class="check" style="margin:10px 0"><input type="checkbox" id="url-full" /> Encode as full URI (keep :, /, ?, &amp; and = intact)</label>
+  <div class="btnrow">
+    <button class="btn" id="url-enc">Encode →</button>
+    <button class="btn" id="url-dec">← Decode</button>
+    <button class="btn ghost" id="url-swap">Use output as input</button>
+    <button class="btn ghost" id="url-clear">Clear</button>
+  </div>
+  <div class="status" id="url-status">Component mode escapes reserved characters — the right choice for a single query value.</div>
+  <label for="url-out" style="margin-top:16px">Output</label>
+  <textarea id="url-out" readonly placeholder="Result appears here…" spellcheck="false"></textarea>
+  <div class="btnrow">
+    <button class="btn amber" id="url-copy">Copy output</button>
+  </div>
+</div>
+
+<script>
+  import { urlEncode, urlDecode } from '../../lib/logic.js';
+  const $ = (id) => document.getElementById(id);
+  const input = $('url-in'), out = $('url-out'), status = $('url-status');
+  const component = () => !$('url-full').checked;
+  function run(fn, okMsg) {
+    try {
+      out.value = fn(input.value, component());
+      status.className = 'status ok';
+      status.textContent = okMsg;
+    } catch (e) {
+      status.className = 'status err';
+      status.textContent = '✗ ' + e.message;
+    }
+  }
+  $('url-enc').addEventListener('click', () => run(urlEncode, '✓ Encoded.'));
+  $('url-dec').addEventListener('click', () => run(urlDecode, '✓ Decoded.'));
+  $('url-swap').addEventListener('click', () => { input.value = out.value; out.value = ''; });
+  $('url-clear').addEventListener('click', () => { input.value = ''; out.value = ''; status.className = 'status'; status.textContent = 'Cleared.'; });
+  $('url-copy').addEventListener('click', async () => { if (out.value) await navigator.clipboard.writeText(out.value); });
+</script>

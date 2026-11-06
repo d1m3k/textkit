@@ -1,0 +1,40 @@
+---
+import Base from '../layouts/Base.astro';
+import { SITE_NAME, TOOLS, withBase } from '../config/site';
+---
+
+<Base title="About" description="What TextKit is, how the tools are built, and why everything runs in your browser." path="/about/">
+  <div class="prose">
+    <h1>About {SITE_NAME}</h1>
+    <p>
+      TextKit is a small, focused collection of {TOOLS.length} developer and text utilities:
+      the tools a developer or writer reaches for several times a day — formatting JSON,
+      converting it to CSV, encoding Base64, checking a diff, counting words, generating a
+      UUID or a password. Each tool does one job, on one page, with no setup.
+    </p>
+    <h2>Built differently: your data never moves</h2>
+    <p>
+      Conventional online tools upload your input to a server, process it there and send the
+      result back. TextKit tools are delivered to your browser as JavaScript and run entirely
+      on your device. There is no processing server and no upload endpoint, so there is
+      nothing to intercept, log or leak — privacy here is a property of the architecture,
+      not a promise in a policy document.
+    </p>
+    <p>
+      That architecture has two practical side effects. The tools are instant, because there
+      is no network round trip; and they keep working offline once a page has loaded, because
+      there is nothing remote left to call.
+    </p>
+    <h2>Honest limits</h2>
+    <p>
+      Browser tools are not the right answer for everything. Multi-gigabyte files, heavy
+      batch processing and anything that needs a shared team workspace belong in dedicated
+      software. TextKit aims squarely at the everyday 95%: a payload to inspect, a string to
+      encode, a draft to measure — done in seconds, then the tab closes.
+    </p>
+    <p>
+      New here? Start from the <a href={withBase('/tools/')}>full tool index</a>, or read one
+      of the <a href={withBase('/guides/')}>guides</a> on the ideas behind the tools.
+    </p>
+  </div>
+</Base>

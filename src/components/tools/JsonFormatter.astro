@@ -1,0 +1,61 @@
+---
+---
+<div>
+  <label for="jf-in">Your JSON</label>
+  <textarea id="jf-in" placeholder="Paste JSON here…" spellcheck="false"></textarea>
+  <div class="btnrow">
+    <button class="btn" id="jf-format">Format</button>
+    <button class="btn ghost" id="jf-minify">Minify</button>
+    <button class="btn ghost" id="jf-validate">Validate only</button>
+    <button class="btn ghost" id="jf-sample">Load sample</button>
+    <button class="btn ghost" id="jf-clear">Clear</button>
+    <label style="margin:0;display:flex;align-items:center;gap:8px">Indent
+      <select id="jf-indent" style="width:auto">
+        <option value="2">2 spaces</option>
+        <option value="4">4 spaces</option>
+        <option value="tab">Tabs</option>
+      </select>
+    </label>
+  </div>
+  <div class="status" id="jf-status">Waiting for input.</div>
+  <label for="jf-out" style="margin-top:16px">Result</label>
+  <textarea id="jf-out" readonly placeholder="Formatted JSON appears here…" spellcheck="false"></textarea>
+  <div class="btnrow">
+    <button class="btn amber" id="jf-copy">Copy result</button>
+  </div>
+</div>
+
+<script>
+  import { jsonFormat, jsonMinify, jsonValidate } from '../../lib/logic.js';
+  const $ = (id) => document.getElementById(id);
+  const input = $('jf-in'), out = $('jf-out'), status = $('jf-status');
+
+  function showError(v) {
+    status.className = 'status err';
+    status.textContent = `✗ Invalid JSON — ${v.error} (line ${v.line}, column ${v.column})`;
+  }
+  function showOk(msg) {
+    status.className = 'status ok';
+    status.textContent = msg;
+  }
+  function run(mode) {
+    const text = input.value.trim();
+    if (!text) { status.className = 'status'; status.textContent = 'Paste some JSON first.'; return; }
+    const v = jsonValidate(text);
+    if (!v.valid) { showError(v); return; }
+    if (mode === 'validate') { showOk('✓ Valid JSON.'); return; }
+    try {
+      out.value = mode === 'minify' ? jsonMinify(text) : jsonFormat(text, $('jf-indent').value);
+      showOk(mode === 'minify' ? '✓ Valid JSON — minified.' : '✓ Valid JSON — formatted.');
+    } catch (e) { showError(jsonValidate(text)); }
+  }
+  $('jf-format').addEventListener('click', () => run('format'));
+  $('jf-minify').addEventListener('click', () => run('minify'));
+  $('jf-validate').addEventListener('click', () => run('validate'));
+  $('jf-sample').addEventListener('click', () => {
+    input.value = '{"site":"TextKit","tools":12,"private":true,"features":["json","base64","hash"],"meta":{"version":1,"audience":"developers"}}';
+    run('format');
+  });
+  $('jf-clear').addEventListener('click', () => { input.value = ''; out.value = ''; status.className = 'status'; status.textContent = 'Waiting for input.'; });
+  $('jf-copy').addEventListener('click', async () => { if (out.value) await navigator.clipboard.writeText(out.value); });
+</script>

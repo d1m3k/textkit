@@ -1,0 +1,33 @@
+---
+import Base from '../../layouts/Base.astro';
+import { withBase } from '../../config/site';
+
+const guides = [
+  {
+    slug: 'valid-json-checklist',
+    title: 'The Valid JSON Checklist',
+    blurb: 'The seven rules that catch almost every invalid-JSON bug — and a debugging workflow that starts from the error position instead of the top of the file.',
+  },
+  {
+    slug: 'strong-passwords-explained',
+    title: 'Strong Passwords, Explained',
+    blurb: 'Why attackers guess patterns rather than characters, how entropy actually works, and why uniqueness matters as much as strength.',
+  },
+];
+---
+
+<Base title="Guides" description="Short, practical guides from TextKit on JSON, passwords and working with text and data in the browser." path="/guides/">
+  <nav class="breadcrumb"><a href={withBase('/')}>home</a> / <span>guides</span></nav>
+  <h1>Guides</h1>
+  <p style="color:var(--muted);max-width:720px">
+    Short reads that explain the ideas behind the tools — no fluff, no listicles.
+  </p>
+  <div class="card-grid">
+    {guides.map((g) => (
+      <a class="tool-card" href={withBase(`/guides/${g.slug}/`)}>
+        <h3>{g.title}</h3>
+        <p>{g.blurb}</p>
+      </a>
+    ))}
+  </div>
+</Base>

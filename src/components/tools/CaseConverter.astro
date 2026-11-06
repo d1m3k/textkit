@@ -1,0 +1,37 @@
+---
+---
+<div>
+  <label for="cc-in">Your text or identifier</label>
+  <textarea id="cc-in" placeholder="e.g. monthly_active_users, camelCaseName, or a headline in the wrong case…" spellcheck="false"></textarea>
+  <div class="btnrow" id="cc-btns">
+    <button class="btn" data-case="upper">UPPERCASE</button>
+    <button class="btn" data-case="lower">lowercase</button>
+    <button class="btn" data-case="title">Title Case</button>
+    <button class="btn" data-case="sentence">Sentence case</button>
+    <button class="btn" data-case="camel">camelCase</button>
+    <button class="btn" data-case="pascal">PascalCase</button>
+    <button class="btn" data-case="snake">snake_case</button>
+    <button class="btn" data-case="kebab">kebab-case</button>
+    <button class="btn" data-case="constant">CONSTANT_CASE</button>
+  </div>
+  <label for="cc-out">Result</label>
+  <textarea id="cc-out" readonly placeholder="Converted text appears here…" spellcheck="false"></textarea>
+  <div class="btnrow">
+    <button class="btn amber" id="cc-copy">Copy result</button>
+    <button class="btn ghost" id="cc-clear">Clear</button>
+  </div>
+</div>
+
+<script>
+  import { caseConvert } from '../../lib/logic.js';
+  const $ = (id) => document.getElementById(id);
+  const input = $('cc-in'), out = $('cc-out');
+  document.querySelectorAll('#cc-btns [data-case]').forEach((btn) => {
+    btn.addEventListener('click', () => {
+      if (!input.value) return;
+      out.value = caseConvert(input.value, btn.dataset.case);
+    });
+  });
+  $('cc-copy').addEventListener('click', async () => { if (out.value) await navigator.clipboard.writeText(out.value); });
+  $('cc-clear').addEventListener('click', () => { input.value = ''; out.value = ''; });
+</script>

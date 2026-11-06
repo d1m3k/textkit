@@ -1,0 +1,35 @@
+---
+import Base from '../layouts/Base.astro';
+import { SITE_NAME } from '../config/site';
+---
+
+<Base title="Disclaimer" description="The terms of using TextKit tools: free, as-is, and your responsibility to verify results that matter." path="/disclaimer/">
+  <div class="prose">
+    <h1>Disclaimer</h1>
+    <p>
+      {SITE_NAME} is provided free of charge, "as is", for general-purpose text and data
+      utilities. By using the tools you accept the points below.
+    </p>
+    <h2>Verify results that matter</h2>
+    <p>
+      The tools implement standard, well-documented algorithms (the JSON specification,
+      RFC 4648 Base64, the SHA family, RFC 4122 UUIDs) and are tested, but no warranty is
+      given that every output is correct for every input. If a result feeds a production
+      system, a publication or anything with money or safety attached, check it with an
+      independent method first.
+    </p>
+    <h2>Security-sensitive use</h2>
+    <p>
+      Hashes and generated passwords are produced with your browser's cryptographic
+      functions. Even so, a hash is not encryption, Base64 is not protection, and a generated
+      password is only as safe as where you store it — use a reputable password manager.
+      {SITE_NAME} never sees your inputs, and equally cannot recover anything for you.
+    </p>
+    <h2>Liability</h2>
+    <p>
+      To the extent permitted by law, the operators of {SITE_NAME} are not liable for losses
+      arising from the use of, or inability to use, these tools. External sites linked from
+      guides or articles are the responsibility of their own operators.
+    </p>
+  </div>
+</Base>

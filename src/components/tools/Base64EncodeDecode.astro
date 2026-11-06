@@ -1,0 +1,39 @@
+---
+---
+<div>
+  <label for="b64-in">Input</label>
+  <textarea id="b64-in" placeholder="Text to encode, or Base64 to decode…" spellcheck="false"></textarea>
+  <div class="btnrow">
+    <button class="btn" id="b64-enc">Encode →</button>
+    <button class="btn" id="b64-dec">← Decode</button>
+    <button class="btn ghost" id="b64-swap">Use output as input</button>
+    <button class="btn ghost" id="b64-clear">Clear</button>
+  </div>
+  <div class="status" id="b64-status">Unicode-safe: emoji and accented characters are fully supported.</div>
+  <label for="b64-out" style="margin-top:16px">Output</label>
+  <textarea id="b64-out" readonly placeholder="Result appears here…" spellcheck="false"></textarea>
+  <div class="btnrow">
+    <button class="btn amber" id="b64-copy">Copy output</button>
+  </div>
+</div>
+
+<script>
+  import { base64Encode, base64Decode } from '../../lib/logic.js';
+  const $ = (id) => document.getElementById(id);
+  const input = $('b64-in'), out = $('b64-out'), status = $('b64-status');
+  function run(fn, okMsg) {
+    try {
+      out.value = fn(input.value);
+      status.className = 'status ok';
+      status.textContent = okMsg;
+    } catch (e) {
+      status.className = 'status err';
+      status.textContent = '✗ ' + e.message;
+    }
+  }
+  $('b64-enc').addEventListener('click', () => run(base64Encode, '✓ Encoded to Base64.'));
+  $('b64-dec').addEventListener('click', () => run(base64Decode, '✓ Decoded from Base64.'));
+  $('b64-swap').addEventListener('click', () => { input.value = out.value; out.value = ''; });
+  $('b64-clear').addEventListener('click', () => { input.value = ''; out.value = ''; status.className = 'status'; status.textContent = 'Cleared.'; });
+  $('b64-copy').addEventListener('click', async () => { if (out.value) await navigator.clipboard.writeText(out.value); });
+</script>

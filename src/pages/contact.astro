@@ -1,0 +1,31 @@
+---
+import Base from '../layouts/Base.astro';
+import { SITE_NAME, withBase } from '../config/site';
+---
+
+<Base title="Contact" description="How to reach the TextKit project." path="/contact/">
+  <div class="prose">
+    <h1>Contact</h1>
+    <p>
+      This is an example build of {SITE_NAME}. Public contact channels open when the site
+      launches on its own domain — until then there is no monitored inbox for this address,
+      and this page exists so the site structure is complete and honest rather than decorated
+      with a fake contact form.
+    </p>
+    <p>
+      When the site launches, this page will carry a real, monitored contact address for bug
+      reports, tool suggestions and corrections. Found something wrong in a tool right now?
+      The fastest check is to compare against the notes on that tool's own page — every tool
+      documents its method, its edge cases and its limits in the open, for example the
+      <a href={withBase('/tool/json-formatter/')}>JSON Formatter</a> page explains exactly
+      how validation errors are reported.
+    </p>
+    <h2>Suggesting a tool</h2>
+    <p>
+      TextKit grows one sharp tool at a time. A good suggestion is a small, single-purpose
+      text or data utility that can run entirely in a browser — if it needs a server, it
+      belongs somewhere else. Suggestions will be collected through the contact address when
+      it opens.
+    </p>
+  </div>
+</Base>

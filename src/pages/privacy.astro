@@ -1,0 +1,43 @@
+---
+import Base from '../layouts/Base.astro';
+import { SITE_NAME } from '../config/site';
+---
+
+<Base title="Privacy Policy" description="How TextKit handles data: the short version is that tool input never leaves your browser." path="/privacy/">
+  <div class="prose">
+    <h1>Privacy policy</h1>
+    <p><em>Plain-English summary first, details after: {SITE_NAME} tools process everything in your browser. The content you type, paste or generate is never uploaded to us or to anyone else.</em></p>
+
+    <h2>Tool input and output</h2>
+    <p>
+      Every tool on this site runs as JavaScript in your browser tab. Your input is held in
+      the page's memory only, is not transmitted over the network, is not written to any
+      server or database, and disappears when you close or reload the page. There are no
+      accounts, so there are no profiles, passwords or personal records for us to store.
+    </p>
+
+    <h2>What a normal website visit involves</h2>
+    <p>
+      Like any website, loading a page means the hosting provider serves static files to your
+      browser and may keep standard, short-lived server logs (such as IP address and browser
+      type) for security and reliability. Pages load fonts from Google Fonts, which means
+      your browser contacts Google's font servers when a page is first displayed. If
+      advertising is enabled on this site in future, advertising partners may use cookies to
+      serve and measure ads; this policy will be updated before that happens.
+    </p>
+
+    <h2>Cookies</h2>
+    <p>
+      The tools themselves set no cookies and use no local storage to keep your content.
+      Anything you generate — a password, a UUID, a hash — exists only in the page until you
+      copy it away.
+    </p>
+
+    <h2>Changes</h2>
+    <p>
+      If this policy changes, the new version will be published on this page with the date of
+      the change. The core commitment — tool content stays in your browser — is architectural
+      and will not change.
+    </p>
+  </div>
+</Base>

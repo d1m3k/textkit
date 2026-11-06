@@ -1,0 +1,42 @@
+---
+---
+<div>
+  <label for="wc-in">Your text — statistics update as you type</label>
+  <textarea id="wc-in" placeholder="Start typing or paste your text here…" style="min-height:170px"></textarea>
+  <div class="stat-grid" style="margin-top:16px">
+    <div class="stat"><b id="wc-words">0</b><span>Words</span></div>
+    <div class="stat"><b id="wc-chars">0</b><span>Characters</span></div>
+    <div class="stat"><b id="wc-nospaces">0</b><span>Chars, no spaces</span></div>
+    <div class="stat"><b id="wc-sent">0</b><span>Sentences</span></div>
+    <div class="stat"><b id="wc-para">0</b><span>Paragraphs</span></div>
+    <div class="stat"><b id="wc-unique">0</b><span>Unique words</span></div>
+    <div class="stat"><b id="wc-read">0s</b><span>Reading time</span></div>
+    <div class="stat"><b id="wc-speak">0s</b><span>Speaking time</span></div>
+  </div>
+  <p style="font-family:var(--mono);font-size:.9rem;color:var(--muted)">Longest word: <span id="wc-longest" style="color:var(--green)">—</span></p>
+  <div class="btnrow">
+    <button class="btn ghost" id="wc-clear">Clear</button>
+  </div>
+</div>
+
+<script>
+  import { wordCount } from '../../lib/logic.js';
+  const $ = (id) => document.getElementById(id);
+  const input = $('wc-in');
+  const fmtTime = (s) => (s < 60 ? `${s}s` : `${Math.floor(s / 60)}m ${String(s % 60).padStart(2, '0')}s`);
+  function update() {
+    const r = wordCount(input.value);
+    $('wc-words').textContent = r.words;
+    $('wc-chars').textContent = r.characters;
+    $('wc-nospaces').textContent = r.charactersNoSpaces;
+    $('wc-sent').textContent = r.sentences;
+    $('wc-para').textContent = r.paragraphs;
+    $('wc-unique').textContent = r.uniqueWords;
+    $('wc-read').textContent = fmtTime(r.readingTimeSeconds);
+    $('wc-speak').textContent = fmtTime(r.speakingTimeSeconds);
+    $('wc-longest').textContent = r.longestWord || '—';
+  }
+  input.addEventListener('input', update);
+  $('wc-clear').addEventListener('click', () => { input.value = ''; update(); });
+  update();
+</script>

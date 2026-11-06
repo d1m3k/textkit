@@ -1,0 +1,53 @@
+---
+---
+<div>
+  <div class="grid2">
+    <div>
+      <label for="df-a">Original text</label>
+      <textarea id="df-a" placeholder="Paste the original version…" spellcheck="false" style="min-height:170px"></textarea>
+    </div>
+    <div>
+      <label for="df-b">Revised text</label>
+      <textarea id="df-b" placeholder="Paste the revised version…" spellcheck="false" style="min-height:170px"></textarea>
+    </div>
+  </div>
+  <div class="btnrow">
+    <button class="btn" id="df-go">Compare</button>
+    <button class="btn ghost" id="df-sample">Load sample</button>
+    <button class="btn ghost" id="df-clear">Clear</button>
+  </div>
+  <div class="status" id="df-status">Line-by-line comparison — nothing is uploaded.</div>
+  <div id="df-out" style="margin-top:14px"></div>
+</div>
+
+<script>
+  import { diffLines } from '../../lib/logic.js';
+  const $ = (id) => document.getElementById(id);
+  $('df-go').addEventListener('click', () => {
+    const a = $('df-a').value, b = $('df-b').value;
+    const status = $('df-status'), out = $('df-out');
+    if (!a && !b) { status.className = 'status err'; status.textContent = '✗ Paste text on at least one side.'; return; }
+    const rows = diffLines(a, b);
+    const added = rows.filter((r) => r.type === 'add').length;
+    const removed = rows.filter((r) => r.type === 'remove').length;
+    const same = rows.length - added - removed;
+    status.className = 'status ok';
+    status.textContent = added + removed === 0
+      ? '✓ The two texts are identical, line for line.'
+      : `✓ Compared — ${added} line(s) added, ${removed} removed, ${same} unchanged.`;
+    const wrap = document.createElement('div');
+    wrap.className = 'diff-out';
+    for (const r of rows) {
+      const d = document.createElement('div');
+      d.className = r.type === 'add' ? 'diff-add' : r.type === 'remove' ? 'diff-del' : 'diff-same';
+      d.textContent = (r.type === 'add' ? '+ ' : r.type === 'remove' ? '− ' : '  ') + r.text;
+      wrap.appendChild(d);
+    }
+    out.replaceChildren(wrap);
+  });
+  $('df-sample').addEventListener('click', () => {
+    $('df-a').value = 'The release ships on Friday.\nIt includes the new dashboard.\nOld pricing stays for existing users.';
+    $('df-b').value = 'The release ships on Monday.\nIt includes the new dashboard.\nIt also adds CSV export.\nOld pricing stays for existing users.';
+  });
+  $('df-clear').addEventListener('click', () => { $('df-a').value = ''; $('df-b').value = ''; $('df-out').replaceChildren(); $('df-status').className = 'status'; $('df-status').textContent = 'Cleared.'; });
+</script>

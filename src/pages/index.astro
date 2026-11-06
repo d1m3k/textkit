@@ -1,0 +1,77 @@
+---
+import Base from '../layouts/Base.astro';
+import { SITE_NAME, SITE_DESCRIPTION, CATEGORIES, toolsByCategory, withBase, absolute } from '../config/site';
+
+const websiteLd = {
+  '@context': 'https://schema.org',
+  '@type': 'WebSite',
+  name: SITE_NAME,
+  url: absolute('/'),
+  description: SITE_DESCRIPTION,
+};
+const homeFaqs = [
+  { q: 'Are TextKit tools really free?', a: 'Yes — every tool is free, with no account, no usage limits and no watermarks or locked features. The tools are simple browser utilities; they cost almost nothing to run because your own device does the computing.' },
+  { q: 'What happens to the text and files I use in a tool?', a: 'Nothing leaves your device. Every tool runs as JavaScript in your browser tab; there is no upload endpoint at all. Close the tab and the data is gone.' },
+  { q: 'Do I need to install anything?', a: 'No. TextKit is a website, not an app or extension. If a page has loaded once, most tools even keep working with your connection switched off.' },
+  { q: 'Why do the tools work offline?', a: 'Because there is no server-side processing to wait for. The code is delivered once with the page, and from then on your browser does all the work locally.' },
+];
+---
+
+<Base title={SITE_NAME} path="/">
+  <Fragment slot="head">
+    <script type="application/ld+json" set:html={JSON.stringify(websiteLd)} />
+  </Fragment>
+
+  <section class="hero">
+    <p class="term"><span class="g">$</span> textkit run --all --private --no-upload</p>
+    <h1>Developer &amp; text tools that never leave your browser.</h1>
+    <p class="lede">
+      Format JSON, encode Base64, hash, diff and generate — twelve focused utilities that run
+      100% on your device. No accounts, no uploads, no tracking of what you paste.
+    </p>
+    <div class="hero-badges">
+      <span><b>12</b> tools</span>
+      <span><b>0</b> uploads</span>
+      <span><b>0</b> sign-ups</span>
+      <span><b>100%</b> client-side</span>
+    </div>
+  </section>
+
+  {CATEGORIES.map((cat) => (
+    <section>
+      <p class="cat-label">// {cat}</p>
+      <div class="card-grid">
+        {toolsByCategory(cat).map((t) => (
+          <a class="tool-card" href={withBase(`/tool/${t.slug}/`)}>
+            <h3>{t.name}</h3>
+            <p>{t.short}</p>
+          </a>
+        ))}
+      </div>
+    </section>
+  ))}
+
+  <div class="prose">
+    <h2>Why client-side matters</h2>
+    <p>
+      Most online tools work by uploading whatever you paste to a server you know nothing
+      about. That is a bad deal for API payloads with tokens in them, unreleased copy,
+      internal configuration or customer data — exactly the material developers most often
+      need to format, encode and compare.
+    </p>
+    <p>
+      TextKit inverts the model: the code comes to your data, not the other way around. Each
+      page delivers a small piece of JavaScript, your browser does the work, and the result
+      never crosses the network. It is faster (no round trip), it works offline, and it is
+      private by architecture rather than by policy promise.
+    </p>
+
+    <h2>Frequently asked questions</h2>
+    {homeFaqs.map((f) => (
+      <details class="faq">
+        <summary>{f.q}</summary>
+        <p>{f.a}</p>
+      </details>
+    ))}
+  </div>
+</Base>
